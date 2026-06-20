@@ -1786,8 +1786,9 @@
         });
       });
       const flat = currentFlatIndex();
-      progress.style.setProperty("--progress", `${(flat / totalSlides()) * 100}%`);
-      counter.textContent = currentV ? `${currentH + 1}.${currentV + 1}` : `${currentH + 1}`;
+      const total = totalSlides();
+      progress.style.setProperty("--progress", `${(flat / total) * 100}%`);
+      counter.textContent = `${flat} / ${total}`;
       document.title = `${slideTitle(activeSlide(), currentH, currentV)} | Pillar 1 URI Interactive Presentation`;
       updateButtons();
       setHash();
