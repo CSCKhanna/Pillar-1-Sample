@@ -1,0 +1,1968 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>Pillar 1: Teaching and Learning | URI Interactive Presentation</title>
+  <style>
+    :root {
+      --uri-blue: #002147;
+      --uri-blue-deep: #00152f;
+      --uri-blue-soft: #0c376b;
+      --uri-gold: #d0a627;
+      --uri-gold-deep: #c79316;
+      --keaney-blue: #68abe8;
+      --white: #f8fbff;
+      --muted: rgba(248, 251, 255, 0.86);
+      --soft: rgba(248, 251, 255, 0.12);
+      --line: rgba(248, 251, 255, 0.22);
+      --danger: #ff6868;
+      --success: #7ee69b;
+      --warning: #ffd36a;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.36);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: var(--uri-blue-deep);
+      color: var(--white);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.45;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .skip-link {
+      position: fixed;
+      left: 18px;
+      top: 18px;
+      z-index: 100;
+      transform: translateY(-140%);
+      padding: 10px 14px;
+      border: 2px solid var(--uri-gold);
+      border-radius: var(--radius);
+      color: var(--uri-blue);
+      background: var(--white);
+      font-weight: 850;
+      text-decoration: none;
+      transition: transform 160ms ease;
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+      outline: 3px solid var(--keaney-blue);
+      outline-offset: 3px;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(0, 21, 47, 0.36), rgba(0, 21, 47, 0.86)),
+        radial-gradient(ellipse at 50% 95%, rgba(104, 171, 232, 0.24) 0 12%, transparent 42%),
+        radial-gradient(ellipse at 42% 48%, rgba(208, 166, 39, 0.10) 0 12%, transparent 30%),
+        repeating-linear-gradient(90deg, transparent 0 76px, rgba(248, 251, 255, 0.05) 78px 83px, transparent 86px 154px),
+        linear-gradient(112deg, rgba(0, 33, 71, 0.92), rgba(0, 21, 47, 0.96));
+      pointer-events: none;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      left: -10vw;
+      right: -10vw;
+      bottom: -20vh;
+      height: 48vh;
+      background:
+        radial-gradient(ellipse at 50% 20%, rgba(248, 251, 255, 0.14), transparent 34%),
+        linear-gradient(90deg, transparent, rgba(104, 171, 232, 0.10), transparent);
+      transform: skewY(-3deg);
+      pointer-events: none;
+      opacity: 0.74;
+    }
+
+    button {
+      color: inherit;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    button:focus-visible,
+    .overview-card:focus-visible {
+      outline: 3px solid var(--uri-gold);
+      outline-offset: 4px;
+    }
+
+    .slide:focus {
+      outline: none;
+    }
+
+    .deck {
+      position: relative;
+      width: 100vw;
+      height: 100dvh;
+      z-index: 1;
+    }
+
+    .stack,
+    .slide {
+      position: absolute;
+      inset: 0;
+    }
+
+    .stack,
+    .slide {
+      display: none;
+    }
+
+    .stack.is-active,
+    .slide.is-active {
+      display: block;
+    }
+
+    .slide {
+      overflow: auto;
+      padding: clamp(46px, 7vh, 82px) clamp(28px, 7vw, 92px) clamp(78px, 11vh, 112px);
+      animation: settle 260ms ease both;
+    }
+
+    @keyframes settle {
+      from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.992);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .slide-inner {
+      width: min(1120px, 100%);
+      min-height: calc(100dvh - clamp(124px, 18vh, 194px));
+      margin: 0 auto;
+      display: grid;
+      align-content: center;
+      gap: 26px;
+    }
+
+    .slide-inner.wide {
+      width: min(1220px, 100%);
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    .kicker {
+      margin: 0 0 8px;
+      color: var(--uri-gold);
+      font-size: clamp(0.82rem, 1.25vw, 1rem);
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 980px;
+      margin: 0 auto;
+      font-size: clamp(3rem, 7.2vw, 6.4rem);
+      line-height: 0.96;
+      letter-spacing: 0;
+      text-wrap: balance;
+      text-shadow: 0 6px 32px rgba(0, 0, 0, 0.5);
+    }
+
+    h2 {
+      margin-bottom: 0;
+      font-size: clamp(2.2rem, 5vw, 4.55rem);
+      line-height: 1.04;
+      letter-spacing: 0;
+      text-wrap: balance;
+      text-shadow: 0 4px 28px rgba(0, 0, 0, 0.48);
+    }
+
+    h3 {
+      margin-bottom: 7px;
+      font-size: clamp(1.08rem, 1.55vw, 1.35rem);
+      line-height: 1.16;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      max-width: 900px;
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: clamp(1.05rem, 1.7vw, 1.42rem);
+      text-wrap: balance;
+    }
+
+    .body-copy {
+      max-width: 880px;
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: clamp(0.98rem, 1.35vw, 1.15rem);
+    }
+
+    .accent {
+      color: var(--keaney-blue);
+      font-weight: 800;
+    }
+
+    .gold {
+      color: var(--uri-gold);
+      font-weight: 800;
+    }
+
+    .red {
+      color: var(--danger);
+      font-weight: 800;
+    }
+
+    .green {
+      color: var(--success);
+      font-weight: 800;
+    }
+
+    .brand-lockup {
+      display: inline-grid;
+      gap: 3px;
+      justify-items: center;
+      margin-bottom: 8px;
+    }
+
+    .uri-mark {
+      color: var(--uri-gold);
+      font-size: clamp(2.2rem, 4.5vw, 4.1rem);
+      font-weight: 900;
+      line-height: 0.9;
+      letter-spacing: 0;
+    }
+
+    .uri-name {
+      color: rgba(248, 251, 255, 0.82);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .glass {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.075));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      min-height: 145px;
+      padding: 18px 18px 17px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.10);
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.16);
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(0.9rem, 1.15vw, 1rem);
+    }
+
+    .card.blue h3,
+    .card.blue .icon {
+      color: var(--keaney-blue);
+    }
+
+    .card.gold h3,
+    .card.gold .icon {
+      color: var(--uri-gold);
+    }
+
+    .card.green h3,
+    .card.green .icon {
+      color: var(--success);
+    }
+
+    .card.red h3,
+    .card.red .icon {
+      color: var(--danger);
+    }
+
+    .card.compact {
+      min-height: 112px;
+    }
+
+    .icon {
+      display: inline-grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      margin-bottom: 12px;
+      border: 1px solid currentColor;
+      border-radius: 50%;
+      color: var(--keaney-blue);
+      font-size: 1.05rem;
+      font-weight: 900;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      width: fit-content;
+      margin-bottom: 10px;
+      padding: 5px 10px;
+      border: 1px solid currentColor;
+      border-radius: 999px;
+      color: var(--status-color);
+      background: color-mix(in srgb, var(--status-color) 16%, transparent);
+      font-size: 0.82rem;
+      font-weight: 850;
+    }
+
+    .status::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .metric-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 20px;
+      align-items: stretch;
+      margin-top: 4px;
+    }
+
+    .metric {
+      min-height: 132px;
+      padding: 20px 18px;
+      border-right: 1px solid rgba(248, 251, 255, 0.18);
+      text-align: center;
+    }
+
+    .metric:last-child {
+      border-right: 0;
+    }
+
+    .metric strong {
+      display: block;
+      color: var(--metric-color, var(--keaney-blue));
+      font-size: clamp(2.5rem, 5.6vw, 5rem);
+      line-height: 0.9;
+      letter-spacing: 0;
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: clamp(0.86rem, 1.2vw, 1rem);
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr));
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .flow-card {
+      position: relative;
+      min-height: 178px;
+      padding: 20px 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.10);
+      text-align: center;
+    }
+
+    .flow-card:not(:last-child)::after {
+      content: ">";
+      position: absolute;
+      right: -18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(208, 166, 39, 0.78);
+      font-size: 1.6rem;
+      font-weight: 800;
+    }
+
+    .flow-card.is-here {
+      border-color: var(--keaney-blue);
+      box-shadow: 0 0 0 2px rgba(104, 171, 232, 0.18), var(--shadow);
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 26px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      color: var(--uri-blue);
+      background: var(--keaney-blue);
+      font-size: 0.84rem;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .comparison {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 32px;
+      align-items: start;
+    }
+
+    .comparison h3 {
+      font-size: clamp(1.35rem, 2.2vw, 1.9rem);
+    }
+
+    .list {
+      display: grid;
+      gap: 11px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      color: var(--muted);
+      font-size: clamp(0.96rem, 1.25vw, 1.08rem);
+    }
+
+    .list li {
+      display: grid;
+      grid-template-columns: 22px 1fr;
+      gap: 8px;
+      align-items: start;
+    }
+
+    .list .bad {
+      color: var(--danger);
+      font-weight: 900;
+    }
+
+    .list .good {
+      color: var(--success);
+      font-weight: 900;
+    }
+
+    .priority-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .priority {
+      padding: 14px 14px 13px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.10);
+      min-height: 150px;
+    }
+
+    .priority h3 {
+      margin-bottom: 8px;
+      font-size: 1rem;
+    }
+
+    .priority p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .numbered {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 13px;
+    }
+
+    .numbered-item {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 13px;
+      align-items: start;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.10);
+    }
+
+    .num {
+      display: inline-grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      color: var(--uri-blue);
+      background: var(--uri-gold);
+      font-weight: 900;
+    }
+
+    .numbered-item p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .callout {
+      width: fit-content;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 12px 18px;
+      border: 1px solid rgba(255, 104, 104, 0.58);
+      border-radius: var(--radius);
+      color: #ff9b9b;
+      background: rgba(255, 104, 104, 0.11);
+      box-shadow: 0 0 24px rgba(255, 104, 104, 0.12);
+      font-weight: 850;
+      text-align: center;
+    }
+
+    .source-note {
+      max-width: 860px;
+      margin: 2px auto 0;
+      color: rgba(248, 251, 255, 0.82);
+      font-size: 0.86rem;
+      text-align: center;
+    }
+
+    .footer {
+      position: fixed;
+      left: 24px;
+      right: 88px;
+      bottom: 20px;
+      z-index: 20;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      color: rgba(248, 251, 255, 0.92);
+      font-size: 0.86rem;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.65);
+      pointer-events: none;
+    }
+
+    .footer span:not(:last-child)::after {
+      content: "·";
+      margin-left: 10px;
+      color: rgba(208, 166, 39, 0.72);
+    }
+
+    .progress {
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      z-index: 30;
+      height: 4px;
+      width: var(--progress, 0%);
+      background: linear-gradient(90deg, var(--uri-gold), var(--keaney-blue));
+      transition: width 220ms ease;
+    }
+
+    .nav {
+      position: fixed;
+      right: 22px;
+      bottom: 34px;
+      z-index: 32;
+      width: 92px;
+      height: 92px;
+      opacity: 0.86;
+    }
+
+    .nav button {
+      position: absolute;
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border: 0;
+      background: transparent;
+      color: var(--keaney-blue);
+      font-size: 2.3rem;
+      font-weight: 900;
+      line-height: 1;
+      text-shadow: 0 2px 18px rgba(0, 0, 0, 0.62);
+    }
+
+    .nav button:disabled {
+      opacity: 0.25;
+      cursor: default;
+    }
+
+    .nav .up {
+      top: 0;
+      left: 29px;
+      transform: rotate(-90deg);
+    }
+
+    .nav .left {
+      top: 29px;
+      left: 0;
+      transform: rotate(180deg);
+    }
+
+    .nav .right {
+      top: 29px;
+      right: 0;
+    }
+
+    .nav .down {
+      bottom: 0;
+      left: 29px;
+      transform: rotate(90deg);
+    }
+
+    .counter {
+      position: fixed;
+      right: 14px;
+      bottom: 8px;
+      z-index: 32;
+      min-width: 28px;
+      padding: 4px 7px;
+      border-radius: 4px;
+      color: var(--white);
+      background: rgba(0, 0, 0, 0.48);
+      font-size: 0.75rem;
+      text-align: center;
+    }
+
+    .utility-nav {
+      position: fixed;
+      right: 20px;
+      top: 20px;
+      z-index: 34;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .utility-nav button {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(248, 251, 255, 0.28);
+      border-radius: var(--radius);
+      color: var(--white);
+      background: rgba(0, 21, 47, 0.5);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.18);
+      backdrop-filter: blur(7px);
+      font-weight: 900;
+    }
+
+    .utility-nav button:hover,
+    .utility-nav button:focus-visible {
+      border-color: var(--uri-gold);
+      color: var(--uri-gold);
+    }
+
+    .shortcut-strip {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      z-index: 31;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 8px 12px;
+      border: 1px solid rgba(208, 166, 39, 0.35);
+      border-radius: var(--radius);
+      background: rgba(208, 166, 39, 0.12);
+      color: rgba(255, 229, 162, 0.92);
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.22);
+      font-size: 0.86rem;
+      backdrop-filter: blur(7px);
+    }
+
+    kbd {
+      display: inline-grid;
+      place-items: center;
+      min-width: 24px;
+      min-height: 22px;
+      padding: 2px 6px;
+      border: 1px solid rgba(255, 255, 255, 0.26);
+      border-radius: 5px;
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.14);
+      font-family: Arial, Helvetica, sans-serif;
+      font-weight: 800;
+      box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.16);
+    }
+
+    .overview {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      display: none;
+      overflow: auto;
+      padding: 48px;
+      background: rgba(0, 15, 34, 0.95);
+    }
+
+    .dialog-close {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(248, 251, 255, 0.34);
+      border-radius: var(--radius);
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.10);
+      font-size: 1.2rem;
+      font-weight: 900;
+    }
+
+    .dialog-close:hover,
+    .dialog-close:focus-visible {
+      border-color: var(--uri-gold);
+      color: var(--uri-gold);
+    }
+
+    .overview.is-open {
+      display: block;
+    }
+
+    .overview h2 {
+      margin-bottom: 24px;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+    }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .overview-card {
+      min-height: 135px;
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.10);
+      color: var(--white);
+      text-align: left;
+    }
+
+    .overview-card.is-current {
+      border-color: var(--uri-gold);
+      box-shadow: 0 0 0 2px rgba(208, 166, 39, 0.25);
+    }
+
+    .overview-card strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--keaney-blue);
+      font-size: 0.8rem;
+    }
+
+    .overview-card span {
+      display: block;
+      font-size: 1rem;
+      font-weight: 850;
+    }
+
+    .help {
+      position: fixed;
+      inset: 0;
+      z-index: 70;
+      display: none;
+      place-items: center;
+      padding: 24px;
+      background: rgba(0, 15, 34, 0.82);
+    }
+
+    .help.is-open {
+      display: grid;
+    }
+
+    .help-panel {
+      position: relative;
+      width: min(560px, 100%);
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(0, 33, 71, 0.96);
+      box-shadow: var(--shadow);
+    }
+
+    .help-panel .dialog-close {
+      top: 14px;
+      right: 14px;
+    }
+
+    .help-panel h2 {
+      margin-bottom: 12px;
+      font-size: 2rem;
+    }
+
+    .help-panel p {
+      margin: 0 0 12px;
+      color: var(--muted);
+    }
+
+    .help-panel ul {
+      display: grid;
+      gap: 9px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      color: var(--muted);
+    }
+
+    .down-prompt {
+      position: relative;
+      width: fit-content;
+      margin: 0 auto;
+      padding: 10px 15px;
+      border: 1px solid rgba(255, 104, 104, 0.56);
+      border-radius: var(--radius);
+      color: #ffa1a1;
+      background: rgba(255, 104, 104, 0.10);
+      font-weight: 850;
+      box-shadow: 0 0 24px rgba(255, 104, 104, 0.12);
+      animation: promptPulse 2.4s ease-in-out infinite;
+      isolation: isolate;
+    }
+
+    .down-prompt::before {
+      content: "";
+      position: absolute;
+      inset: -5px;
+      z-index: -1;
+      border-radius: calc(var(--radius) + 5px);
+      border: 1px solid rgba(255, 104, 104, 0.35);
+      opacity: 0;
+      animation: promptHalo 2.4s ease-in-out infinite;
+    }
+
+    .down-prompt kbd {
+      animation: promptKeyBounce 1.2s ease-in-out infinite;
+      transform-origin: center;
+    }
+
+    @keyframes promptPulse {
+      0%,
+      100% {
+        transform: translateY(0);
+        box-shadow: 0 0 24px rgba(255, 104, 104, 0.12);
+      }
+      50% {
+        transform: translateY(-2px);
+        box-shadow: 0 0 34px rgba(255, 104, 104, 0.28);
+      }
+    }
+
+    @keyframes promptHalo {
+      0% {
+        opacity: 0;
+        transform: scale(0.98);
+      }
+      42% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: scale(1.08);
+      }
+    }
+
+    @keyframes promptKeyBounce {
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+      45% {
+        transform: translateY(3px);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .slide,
+      .down-prompt,
+      .down-prompt::before,
+      .down-prompt kbd {
+        animation: none;
+      }
+    }
+
+    .two-up {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 16px;
+    }
+
+    .thin {
+      max-width: 780px;
+    }
+
+    .phase-note {
+      margin: 0 auto;
+      color: rgba(248, 251, 255, 0.72);
+      font-style: italic;
+      text-align: center;
+    }
+
+    @media (max-width: 900px) {
+      body,
+      html {
+        overflow: auto;
+      }
+
+      body::before,
+      body::after {
+        position: fixed;
+      }
+
+      .deck {
+        min-height: 100dvh;
+      }
+
+      .slide {
+        padding: 34px 18px 150px;
+      }
+
+      .slide-inner {
+        min-height: calc(100dvh - 140px);
+      }
+
+      .card-grid,
+      .priority-grid,
+      .numbered,
+      .comparison,
+      .two-up,
+      .flow,
+      .metric-row {
+        grid-template-columns: 1fr;
+      }
+
+      .metric {
+        border-right: 0;
+        border-bottom: 1px solid rgba(248, 251, 255, 0.18);
+      }
+
+      .metric:last-child {
+        border-bottom: 0;
+      }
+
+      .flow-card:not(:last-child)::after {
+        right: auto;
+        left: 50%;
+        top: auto;
+        bottom: -24px;
+        transform: translateX(-50%) rotate(90deg);
+      }
+
+      .shortcut-strip {
+        display: none;
+      }
+
+      .footer {
+        display: none;
+      }
+
+      .nav {
+        right: 12px;
+        bottom: 30px;
+        transform: scale(0.78);
+        transform-origin: bottom right;
+        opacity: 0.7;
+      }
+
+      .overview {
+        padding: 28px 18px;
+      }
+
+      .utility-nav {
+        right: 12px;
+        top: 12px;
+        transform: scale(0.9);
+        transform-origin: top right;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .nav,
+      .counter {
+        display: none;
+      }
+
+      .utility-nav {
+        gap: 6px;
+      }
+
+      .utility-nav button {
+        width: 34px;
+        height: 34px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#deck">Skip to presentation</a>
+  <p class="sr-only" id="deckInstructions">Interactive slide deck. Use the arrow keys to navigate the main story and drill-down slides. Each slide change announces the slide title and readable slide content. Use Escape to open or close the slide overview. Use the on-screen buttons for overview, help, and fullscreen.</p>
+  <div class="sr-only" id="slideStatus" role="status" aria-live="polite" aria-atomic="true" aria-relevant="text"></div>
+  <main class="deck" id="deck" aria-label="Pillar 1 interactive presentation" aria-describedby="deckInstructions" tabindex="-1">
+    <section class="stack" data-label="Title">
+      <article class="slide" data-title="Pillar 1: Teaching and Learning">
+        <div class="slide-inner center">
+          <div class="brand-lockup" aria-label="University of Rhode Island">
+            <span class="uri-mark">URI</span>
+            <span class="uri-name">University of Rhode Island</span>
+          </div>
+          <p class="kicker">2026&ndash;2028 AI Strategy</p>
+          <h1>Pillar 1: Teaching and Learning</h1>
+          <p class="lead">Principled flexibility, shared guidance, equitable access, and AI literacy across roles.</p>
+          <div class="shortcut-strip" aria-hidden="true">
+            <span><kbd>&larr;</kbd> <kbd>&rarr;</kbd> navigate</span>
+            <span><kbd>&darr;</kbd> drill down</span>
+            <span><kbd>Esc</kbd> overview</span>
+            <span><kbd>Alt</kbd> + <kbd>H</kbd> help</span>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="stack" data-label="Direction">
+      <article class="slide" data-title="Priority Direction">
+        <div class="slide-inner center">
+          <p class="kicker">Priority Direction</p>
+          <h2>Principled flexibility in teaching and learning.</h2>
+          <p class="lead">URI should support shared guidance, equitable access, and AI literacy while preserving faculty authority to determine how AI fits each course.</p>
+          <div class="card-grid" style="--cols: 3">
+            <div class="card blue">
+              <span class="icon">1</span>
+              <h3>Shared Guidance</h3>
+              <p>Provide practical, plain-language expectations that students and instructors can recognize across the institution.</p>
+            </div>
+            <div class="card gold">
+              <span class="icon">2</span>
+              <h3>Equitable Access</h3>
+              <p>Reduce gaps in access to advanced tools, guidance, and support across students, faculty, departments, and units.</p>
+            </div>
+            <div class="card green">
+              <span class="icon">3</span>
+              <h3>Faculty Authority</h3>
+              <p>Affirm instructor choice: require, limit, or prohibit AI use when that decision supports learning goals.</p>
+            </div>
+          </div>
+          <div class="down-prompt">Press <kbd>&darr;</kbd> to unpack the principle</div>
+        </div>
+      </article>
+      <article class="slide" data-title="What Principled Flexibility Means">
+        <div class="slide-inner">
+          <p class="kicker">Teaching Principle</p>
+          <h2>Flexible does not mean vague.</h2>
+          <div class="comparison">
+            <div>
+              <h3 class="red">Without coordination</h3>
+              <ul class="list">
+                <li><span class="bad">x</span><span>Students encounter course expectations that feel unrelated or contradictory.</span></li>
+                <li><span class="bad">x</span><span>Faculty repeat policy work individually instead of adapting shared guidance.</span></li>
+                <li><span class="bad">x</span><span>AI literacy remains uneven across roles, programs, and tool access.</span></li>
+              </ul>
+            </div>
+            <div>
+              <h3 class="green">With principled flexibility</h3>
+              <ul class="list">
+                <li><span class="good">✓</span><span>University guidance creates a common floor, not a one-size-fits-all ceiling.</span></li>
+                <li><span class="good">✓</span><span>Departments define norms that fit disciplinary and professional contexts.</span></li>
+                <li><span class="good">✓</span><span>Instructors retain final authority over course-level AI expectations.</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="stack" data-label="Progress">
+      <article class="slide" data-title="Current Progress Since 2024">
+        <div class="slide-inner wide center">
+          <p class="kicker">Current Progress Since 2024</p>
+          <h2>URI has moved from early awareness toward practical planning.</h2>
+          <div class="card-grid" style="--cols: 4">
+            <div class="card blue compact">
+              <h3>Centralized Resources</h3>
+              <p>AI support and guidance now exist through the Provost, ATL, ITS, TLS, and University Libraries.</p>
+            </div>
+            <div class="card green compact">
+              <h3>Faculty Development</h3>
+              <p>Workshops, speakers, consultations, teaching circles, and campus conversations have expanded.</p>
+            </div>
+            <div class="card gold compact">
+              <h3>Syllabus Guidance</h3>
+              <p>AI syllabus language launched in 2025 through the Provost and Faculty Senate.</p>
+            </div>
+            <div class="card blue compact">
+              <h3>Instructional Use</h3>
+              <p>Faculty and students increasingly use AI for drafting, tutoring, coding, feedback, and exploration.</p>
+            </div>
+          </div>
+          <div class="down-prompt">Press <kbd>&darr;</kbd> to see what still needs attention</div>
+        </div>
+      </article>
+      <article class="slide" data-title="Needs More Attention">
+        <div class="slide-inner">
+          <p class="kicker">Needs More Attention</p>
+          <h2>Progress is real, but the next phase needs coordination.</h2>
+          <div class="card-grid" style="--cols: 3">
+            <div class="card red">
+              <h3>AI Literacy</h3>
+              <p>Shared student and faculty competencies remain uneven.</p>
+            </div>
+            <div class="card red">
+              <h3>Course Expectations</h3>
+              <p>Students may receive different guidance across courses and programs.</p>
+            </div>
+            <div class="card red">
+              <h3>Assessment</h3>
+              <p>Faculty need support redesigning assignments, exams, quizzes, and projects.</p>
+            </div>
+            <div class="card gold">
+              <h3>Copyright and IP</h3>
+              <p>Protected, licensed, unpublished, student, and sensitive materials need clearer guidance.</p>
+            </div>
+            <div class="card gold">
+              <h3>Integrated Tools</h3>
+              <p>AI is increasingly embedded in browsers, writing tools, coding tools, and search platforms.</p>
+            </div>
+            <div class="card gold">
+              <h3>Graduate Education</h3>
+              <p>Theses, dissertations, advisor expectations, methods, and disclosure practices need attention.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="stack" data-label="Matrix">
+      <article class="slide" data-title="Priority Matrix">
+        <div class="slide-inner wide center">
+          <p class="kicker">Priority Matrix</p>
+          <h2>Nine teaching and learning priorities.</h2>
+          <div class="priority-grid">
+            <div class="priority">
+              <span class="status" style="--status-color: var(--uri-gold)">Needs Expansion</span>
+              <h3>AI Literacy</h3>
+              <p>Learning outcomes and training for students, faculty, graduate instructors, TAs, and instructional staff.</p>
+            </div>
+            <div class="priority">
+              <span class="status" style="--status-color: var(--keaney-blue)">Emerging</span>
+              <h3>Discipline-Specific Norms</h3>
+              <p>Department and program expectations that fit fields, accreditation, and professional standards.</p>
+            </div>
+            <div class="priority">
+              <span class="status" style="--status-color: var(--keaney-blue)">Needs Communication</span>
+              <h3>Instructor Choice</h3>
+              <p>Clear authority for instructors to require, limit, or prohibit AI use when course goals require it.</p>
+            </div>
+            <div class="priority">
+              <span class="status" style="--status-color: var(--success)">Advancing</span>
+              <h3>Faculty Development</h3>
+              <p>ATL, TLS, ITS, Library, and faculty-led programming at beginner, intermediate, and discipline levels.</p>
+            </div>
+            <div class="priority">
+              <span class="status" style="--status-color: var(--danger)">Needs Attention</span>
+              <h3>Assessment Design</h3>
+              <p>Assignments, exams, quizzes, and projects that support integrity, authentic learning, and higher-order thinking.</p>
+            </div>
+            <div class="priority">
+              <span class="status" style="--status-color: var(--keaney-blue)">Emerging</span>
+              <h3>Integrated AI Tools</h3>
+              <p>AI embedded in browsers, productivity software, writing tools, coding tools, search, and course technology.</p>
+            </div>
+            <div class="priority">
+              <span class="status" style="--status-color: var(--danger)">Needs Attention</span>
+              <h3>Equitable Access</h3>
+              <p>An AI tools availability library and reduced gaps in access to advanced or paid tools.</p>
+            </div>
+            <div class="priority">
+              <span class="status" style="--status-color: var(--danger)">Needs Attention</span>
+              <h3>Copyright and IP Guidance</h3>
+              <p>Plain-language guidance on copyrighted, student, unpublished, licensed, and sensitive materials.</p>
+            </div>
+            <div class="priority">
+              <span class="status" style="--status-color: var(--keaney-blue)">Emerging</span>
+              <h3>Graduate Education</h3>
+              <p>Guidance for theses, dissertations, advisor expectations, literature review, coding, methods, and disclosure.</p>
+            </div>
+          </div>
+          <div class="down-prompt">Press <kbd>&darr;</kbd> for the highest-attention cluster</div>
+        </div>
+      </article>
+      <article class="slide" data-title="Highest-Attention Cluster">
+        <div class="slide-inner center">
+          <p class="kicker">Highest-Attention Cluster</p>
+          <h2>Three areas carry the most immediate risk.</h2>
+          <div class="card-grid" style="--cols: 3">
+            <div class="card red">
+              <span class="icon">A</span>
+              <h3>Assessment Design</h3>
+              <p>AI complicates traditional assignments, making assessment design central to teaching quality and integrity.</p>
+            </div>
+            <div class="card red">
+              <span class="icon">B</span>
+              <h3>Equitable Access</h3>
+              <p>Uneven tool access can create inequities across students, faculty, departments, and units.</p>
+            </div>
+            <div class="card red">
+              <span class="icon">C</span>
+              <h3>Copyright and IP Guidance</h3>
+              <p>Faculty and students need clearer boundaries for uploading protected or sensitive materials to AI systems.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="slide" data-title="Emerging Work">
+        <div class="slide-inner center">
+          <p class="kicker">Emerging Work</p>
+          <h2>Three areas need structure before practice outruns guidance.</h2>
+          <div class="card-grid" style="--cols: 3">
+            <div class="card blue">
+              <h3>Discipline-Specific Norms</h3>
+              <p>A single university-wide rule cannot fit every course, discipline, accreditation, or professional context.</p>
+            </div>
+            <div class="card blue">
+              <h3>Integrated AI Tools</h3>
+              <p>AI is becoming built into everyday software, making boundaries less visible to students and instructors.</p>
+            </div>
+            <div class="card blue">
+              <h3>Graduate Education</h3>
+              <p>Graduate students and advisors need clearer expectations for responsible AI use in advanced academic work.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="stack" data-label="Recommendations">
+      <article class="slide" data-title="Highest-Priority Recommendations">
+        <div class="slide-inner wide">
+          <p class="kicker">Highest-Priority Recommendations</p>
+          <h2>Six actions define the next implementation cycle.</h2>
+          <div class="numbered">
+            <div class="numbered-item">
+              <span class="num">1</span>
+              <div><h3>Strengthen AI literacy.</h3><p>Build outcomes and modules around foundations, prompt practices, verification, bias, privacy, attribution, and disclosure.</p></div>
+            </div>
+            <div class="numbered-item">
+              <span class="num">2</span>
+              <div><h3>Support discipline-specific norms.</h3><p>Help departments define expectations that fit their fields and learning outcomes.</p></div>
+            </div>
+            <div class="numbered-item">
+              <span class="num">3</span>
+              <div><h3>Preserve instructor choice.</h3><p>Continue to affirm course-level authority to require, limit, or prohibit AI use.</p></div>
+            </div>
+            <div class="numbered-item">
+              <span class="num">4</span>
+              <div><h3>Expand faculty development.</h3><p>Reach non-early adopters, part-time faculty, graduate instructors, and high-stakes professional programs.</p></div>
+            </div>
+            <div class="numbered-item">
+              <span class="num">5</span>
+              <div><h3>Develop assessment supports.</h3><p>Help faculty redesign assignments, exams, quizzes, and projects for authentic learning.</p></div>
+            </div>
+            <div class="numbered-item">
+              <span class="num">6</span>
+              <div><h3>Clarify tool, copyright, and graduate guidance.</h3><p>Create practical guidance for integrated tools, protected materials, access, and graduate expectations.</p></div>
+            </div>
+          </div>
+          <div class="down-prompt">Press <kbd>&darr;</kbd> for sequencing</div>
+        </div>
+      </article>
+      <article class="slide" data-title="Recommendation Sequence">
+        <div class="slide-inner center">
+          <p class="kicker">Implementation Sequence</p>
+          <h2>Build shared capacity first, then localize it.</h2>
+          <div class="flow" style="--cols: 4">
+            <div class="flow-card is-here">
+              <span class="tag">Start</span>
+              <h3>Shared AI Literacy</h3>
+              <p>Common competencies for students, faculty, TAs, graduate instructors, and instructional staff.</p>
+            </div>
+            <div class="flow-card">
+              <h3>Course Guidance</h3>
+              <p>Syllabus, assignment, assessment, disclosure, and attribution expectations.</p>
+            </div>
+            <div class="flow-card">
+              <h3>Discipline Norms</h3>
+              <p>Department and program-level adaptation for accreditation, professions, and learning outcomes.</p>
+            </div>
+            <div class="flow-card">
+              <h3>Scale Support</h3>
+              <p>Faculty development, tool access, graduate education, and continuous improvement.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="stack" data-label="Literacy">
+      <article class="slide" data-title="AI Literacy">
+        <div class="slide-inner center">
+          <p class="kicker">AI Literacy</p>
+          <h2>Move from general awareness to shared learning outcomes.</h2>
+          <p class="lead">Students and instructors need practical skills for prompt use, verification, bias awareness, privacy, attribution, and disclosure.</p>
+          <div class="card-grid" style="--cols: 4">
+            <div class="card blue compact"><h3>Students</h3><p>Use, verify, cite, disclose, and question AI output.</p></div>
+            <div class="card blue compact"><h3>Faculty</h3><p>Align AI use with learning goals and assessment design.</p></div>
+            <div class="card blue compact"><h3>Graduate Roles</h3><p>Clarify research, teaching, coding, and writing expectations.</p></div>
+            <div class="card blue compact"><h3>Instructional Staff</h3><p>Apply guidance consistently across support and learning contexts.</p></div>
+          </div>
+          <div class="down-prompt">Press <kbd>&darr;</kbd> for the competency stack</div>
+        </div>
+      </article>
+      <article class="slide" data-title="AI Literacy Competency Stack">
+        <div class="slide-inner center">
+          <p class="kicker">Competency Stack</p>
+          <h2>AI literacy is operational, not abstract.</h2>
+          <div class="flow" style="--cols: 6">
+            <div class="flow-card"><h3>Prompt</h3><p>Frame useful, bounded requests.</p></div>
+            <div class="flow-card"><h3>Verify</h3><p>Check accuracy, sources, and limits.</p></div>
+            <div class="flow-card"><h3>Detect Bias</h3><p>Question outputs and assumptions.</p></div>
+            <div class="flow-card"><h3>Protect Data</h3><p>Avoid sensitive or restricted inputs.</p></div>
+            <div class="flow-card"><h3>Attribute</h3><p>Credit AI support appropriately.</p></div>
+            <div class="flow-card"><h3>Disclose</h3><p>Explain how AI was or was not used.</p></div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="stack" data-label="Course Expectations">
+      <article class="slide" data-title="Course-Level Expectations">
+        <div class="slide-inner">
+          <p class="kicker">Course-Level Expectations</p>
+          <h2>Shared guidance should strengthen, not replace, instructor judgment.</h2>
+          <div class="two-up">
+            <div class="card blue">
+              <h3>Discipline-Specific Norms</h3>
+              <p>Departments and programs define AI expectations that fit fields, accreditation requirements, professional standards, and core learning outcomes.</p>
+            </div>
+            <div class="card green">
+              <h3>Instructor Choice</h3>
+              <p>Instructors may require, limit, or prohibit AI use when that decision supports course goals, academic integrity, or disciplinary expectations.</p>
+            </div>
+          </div>
+          <p class="phase-note">A university-wide baseline can make local course expectations easier to explain.</p>
+        </div>
+      </article>
+    </section>
+
+    <section class="stack" data-label="Assessment and Access">
+      <article class="slide" data-title="Assessment, Access, and Tools">
+        <div class="slide-inner center">
+          <p class="kicker">Assessment, Access, and Tools</p>
+          <h2>The practical pressure points are already here.</h2>
+          <div class="card-grid" style="--cols: 3">
+            <div class="card red">
+              <h3>Assessment Design</h3>
+              <p>Redesign assignments, exams, quizzes, and projects to support academic integrity and authentic learning.</p>
+            </div>
+            <div class="card gold">
+              <h3>Integrated AI Tools</h3>
+              <p>Help faculty and students understand AI embedded in browsers, productivity tools, writing tools, coding tools, and search.</p>
+            </div>
+            <div class="card red">
+              <h3>Equitable Access</h3>
+              <p>Create or expand an AI tools availability library and reduce gaps in access to advanced or paid tools.</p>
+            </div>
+          </div>
+          <div class="down-prompt">Press <kbd>&darr;</kbd> for assessment implications</div>
+        </div>
+      </article>
+      <article class="slide" data-title="Assessment Implications">
+        <div class="slide-inner">
+          <p class="kicker">Assessment Implications</p>
+          <h2>Assessment is the place where policy becomes pedagogy.</h2>
+          <div class="comparison">
+            <div>
+              <h3 class="red">Traditional friction</h3>
+              <ul class="list">
+                <li><span class="bad">x</span><span>Take-home writing, coding, or problem sets may no longer reveal individual process.</span></li>
+                <li><span class="bad">x</span><span>Detection-based approaches can create false confidence and uneven enforcement.</span></li>
+                <li><span class="bad">x</span><span>Students may be unclear when AI support becomes academic misconduct.</span></li>
+              </ul>
+            </div>
+            <div>
+              <h3 class="green">Design response</h3>
+              <ul class="list">
+                <li><span class="good">✓</span><span>Make process, reflection, verification, and discipline-specific judgment visible.</span></li>
+                <li><span class="good">✓</span><span>Use authentic tasks that ask students to evaluate and improve AI-supported work.</span></li>
+                <li><span class="good">✓</span><span>Connect syllabus guidance directly to assignments and learning outcomes.</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="stack" data-label="Guidance">
+      <article class="slide" data-title="Copyright, IP, and Graduate Education">
+        <div class="slide-inner center">
+          <p class="kicker">Guidance Needing Clarification</p>
+          <h2>Tool guidance must include rights, data, and advanced academic work.</h2>
+          <div class="card-grid" style="--cols: 3">
+            <div class="card gold">
+              <h3>Copyright and IP</h3>
+              <p>Clarify uploading copyrighted material, student work, unpublished work, licensed materials, and sensitive information.</p>
+            </div>
+            <div class="card blue">
+              <h3>Graduate Education</h3>
+              <p>Add expectations for theses, dissertations, advisor guidance, literature review, coding, research methods, and disclosure.</p>
+            </div>
+            <div class="card green">
+              <h3>Responsible Use</h3>
+              <p>Keep human judgment, student intellectual contribution, and research integrity visible in AI-supported work.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="stack" data-label="Shift">
+      <article class="slide" data-title="2024 to 2028 Shift">
+        <div class="slide-inner">
+          <p class="kicker">2024 Context</p>
+          <h2>The goals remain relevant. The work changes.</h2>
+          <div class="comparison">
+            <div>
+              <h3 class="gold">2024 emphasis</h3>
+              <ul class="list">
+                <li><span class="gold">1</span><span>Develop AI literacy across students and instructional roles.</span></li>
+                <li><span class="gold">2</span><span>Create centralized resources, examples, guidance, and innovation supports.</span></li>
+                <li><span class="gold">3</span><span>Develop sample syllabus language for adopting, limiting, or prohibiting AI use.</span></li>
+                <li><span class="gold">4</span><span>Support course and program adaptation in response to generative AI.</span></li>
+              </ul>
+            </div>
+            <div>
+              <h3 class="green">2026&ndash;2028 shift</h3>
+              <ul class="list">
+                <li><span class="good">✓</span><span>Move from awareness toward shared outcomes and practical modules.</span></li>
+                <li><span class="good">✓</span><span>Use AI@URI as a clearer coordinating hub for teaching guidance and events.</span></li>
+                <li><span class="good">✓</span><span>Connect syllabus language to assignments, exams, outcomes, and program expectations.</span></li>
+                <li><span class="good">✓</span><span>Track certificates, course revisions, applied pathways, and interdisciplinary models.</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="stack" data-label="Roadmap">
+      <article class="slide" data-title="Implementation Roadmap">
+        <div class="slide-inner center">
+          <p class="kicker">Implementation Roadmap</p>
+          <h2>From awareness to coordinated implementation.</h2>
+          <div class="flow" style="--cols: 4">
+            <div class="flow-card is-here">
+              <span class="tag">Now</span>
+              <h3>Coordinate</h3>
+              <p>Clarify ownership, publish common guidance, and align existing support channels.</p>
+            </div>
+            <div class="flow-card">
+              <h3>Build</h3>
+              <p>Create learning outcomes, training modules, guidance templates, and tool-access resources.</p>
+            </div>
+            <div class="flow-card">
+              <h3>Pilot</h3>
+              <p>Support departments and programs with discipline-specific norms and assessment redesign.</p>
+            </div>
+            <div class="flow-card">
+              <h3>Measure</h3>
+              <p>Track adoption, equity gaps, faculty development reach, student clarity, and graduate guidance.</p>
+            </div>
+          </div>
+          <div class="down-prompt">Press <kbd>&darr;</kbd> for success indicators</div>
+        </div>
+      </article>
+      <article class="slide" data-title="Success Indicators">
+        <div class="slide-inner center">
+          <p class="kicker">Success Indicators</p>
+          <h2>Measure clarity, capacity, and equity.</h2>
+          <div class="metric-row glass">
+            <div class="metric" style="--metric-color: var(--keaney-blue)">
+              <strong>1</strong>
+              <span>Shared AI literacy outcomes adopted across roles.</span>
+            </div>
+            <div class="metric" style="--metric-color: var(--success)">
+              <strong>2</strong>
+              <span>Departments publish discipline-specific norms.</span>
+            </div>
+            <div class="metric" style="--metric-color: var(--uri-gold)">
+              <strong>3</strong>
+              <span>Faculty development reaches non-early adopters.</span>
+            </div>
+            <div class="metric" style="--metric-color: var(--danger)">
+              <strong>4</strong>
+              <span>Equity, copyright, and graduate guidance gaps shrink.</span>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="stack" data-label="Close">
+      <article class="slide" data-title="Close">
+        <div class="slide-inner center">
+          <div class="brand-lockup" aria-label="University of Rhode Island">
+            <span class="uri-mark">URI</span>
+            <span class="uri-name">University of Rhode Island</span>
+          </div>
+          <p class="kicker">Teaching and Learning</p>
+          <h2>Shared capacity. Course-level judgment. Equitable access.</h2>
+          <p class="lead thin">The next phase is coordinated implementation: clear enough for students, flexible enough for disciplines, and practical enough for instructors.</p>
+          <p class="source-note">Source content: Pillar 1: Teaching and Learning document. Theme based on URI brand colors and screened-image guidance.</p>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <div class="footer" aria-hidden="true">
+    <span>University of Rhode Island</span>
+    <span>Pillar 1</span>
+    <span>Teaching and Learning</span>
+    <span>2026&ndash;2028</span>
+  </div>
+  <div class="progress" id="progress"></div>
+  <nav class="nav" aria-label="Slide navigation">
+    <button class="up" id="upBtn" type="button" aria-label="Previous vertical slide">&rsaquo;</button>
+    <button class="left" id="leftBtn" type="button" aria-label="Previous slide">&rsaquo;</button>
+    <button class="right" id="rightBtn" type="button" aria-label="Next slide">&rsaquo;</button>
+    <button class="down" id="downBtn" type="button" aria-label="Next vertical slide">&rsaquo;</button>
+  </nav>
+  <div class="counter" id="counter" aria-hidden="true">1</div>
+  <div class="utility-nav" aria-label="Presentation utilities">
+    <button id="overviewBtn" type="button" aria-label="Open slide overview, ▦" aria-controls="overview" title="Overview">▦</button>
+    <button id="helpBtn" type="button" aria-label="Open keyboard shortcuts, ?" aria-controls="help" title="Help">?</button>
+    <button id="fullscreenBtn" type="button" aria-label="Toggle fullscreen, ⛶" title="Fullscreen">⛶</button>
+  </div>
+
+  <section class="overview" id="overview" role="dialog" aria-modal="true" aria-labelledby="overviewTitle" aria-hidden="true">
+    <button class="dialog-close" id="overviewCloseBtn" type="button" aria-label="Close slide overview">×</button>
+    <h2 id="overviewTitle">Overview</h2>
+    <div class="overview-grid" id="overviewGrid"></div>
+  </section>
+
+  <section class="help" id="help" role="dialog" aria-modal="true" aria-labelledby="helpTitle" aria-hidden="true">
+    <div class="help-panel" tabindex="-1">
+      <button class="dialog-close" id="helpCloseBtn" type="button" aria-label="Close keyboard shortcuts">×</button>
+      <h2 id="helpTitle">Shortcuts</h2>
+      <p>This is an interactive presentation with horizontal sections and vertical drill-down slides.</p>
+      <ul>
+        <li><kbd>&larr;</kbd> / <kbd>&rarr;</kbd> move through the main story</li>
+        <li><kbd>&uarr;</kbd> / <kbd>&darr;</kbd> move through drill-down slides</li>
+        <li><kbd>Esc</kbd> open or close overview</li>
+        <li><kbd>Alt</kbd> + <kbd>F</kbd> toggle fullscreen</li>
+        <li><kbd>Alt</kbd> + <kbd>H</kbd> show or hide this help</li>
+      </ul>
+    </div>
+  </section>
+
+  <script>
+    const deck = document.getElementById("deck");
+    const stacks = Array.from(document.querySelectorAll(".stack"));
+    const overview = document.getElementById("overview");
+    const overviewGrid = document.getElementById("overviewGrid");
+    const help = document.getElementById("help");
+    const helpPanel = help.querySelector(".help-panel");
+    const progress = document.getElementById("progress");
+    const counter = document.getElementById("counter");
+    const slideStatus = document.getElementById("slideStatus");
+    const buttons = {
+      left: document.getElementById("leftBtn"),
+      right: document.getElementById("rightBtn"),
+      up: document.getElementById("upBtn"),
+      down: document.getElementById("downBtn"),
+      overview: document.getElementById("overviewBtn"),
+      help: document.getElementById("helpBtn"),
+      fullscreen: document.getElementById("fullscreenBtn"),
+      overviewClose: document.getElementById("overviewCloseBtn"),
+      helpClose: document.getElementById("helpCloseBtn")
+    };
+    let currentH = 0;
+    let currentV = 0;
+    let focusSlideOnRender = false;
+
+    function stackSlides(index = currentH) {
+      return Array.from(stacks[index].querySelectorAll(".slide"));
+    }
+
+    function totalSlides() {
+      return stacks.reduce((sum, stack) => sum + stack.querySelectorAll(".slide").length, 0);
+    }
+
+    function currentFlatIndex() {
+      let index = 0;
+      for (let i = 0; i < currentH; i += 1) {
+        index += stackSlides(i).length;
+      }
+      return index + currentV + 1;
+    }
+
+    function flatIndexFor(hIndex, vIndex) {
+      let index = 0;
+      for (let i = 0; i < hIndex; i += 1) {
+        index += stackSlides(i).length;
+      }
+      return index + vIndex + 1;
+    }
+
+    function slideTitle(slide, hIndex, vIndex) {
+      return slide.dataset.title || stacks[hIndex].dataset.label || `Slide ${flatIndexFor(hIndex, vIndex)}`;
+    }
+
+    function activeSlide() {
+      return stackSlides()[currentV];
+    }
+
+    function activeSlideLabel() {
+      const slide = activeSlide();
+      return `Slide ${currentFlatIndex()} of ${totalSlides()}: ${slideTitle(slide, currentH, currentV)}`;
+    }
+
+    function readableSlideContent(slide) {
+      const clone = slide.cloneNode(true);
+      clone.querySelectorAll("[aria-hidden='true'], script, style").forEach((node) => node.remove());
+      clone.querySelectorAll("kbd").forEach((key) => {
+        key.replaceWith(document.createTextNode(` ${key.textContent.trim()} `));
+      });
+      return clone.textContent
+        .replace(/\s+/g, " ")
+        .replace(/([x✓])(?=[A-Z])/g, "$1 ")
+        .replace(/\s+([,.;:!?])/g, "$1")
+        .trim();
+    }
+
+    function announceActiveSlide() {
+      const label = activeSlideLabel();
+      const content = readableSlideContent(activeSlide());
+      slideStatus.textContent = content ? `${label}. Slide content: ${content}` : label;
+    }
+
+    function syncOverlayState() {
+      const overviewOpen = overview.classList.contains("is-open");
+      const helpOpen = help.classList.contains("is-open");
+      const overlayOpen = overviewOpen || helpOpen;
+      overview.setAttribute("aria-hidden", String(!overviewOpen));
+      help.setAttribute("aria-hidden", String(!helpOpen));
+      deck.toggleAttribute("inert", overlayOpen);
+      deck.setAttribute("aria-hidden", String(overlayOpen));
+      buttons.overview.setAttribute("aria-expanded", String(overviewOpen));
+      buttons.help.setAttribute("aria-expanded", String(helpOpen));
+    }
+
+    function initializeSemantics() {
+      document.querySelectorAll(".card-grid, .priority-grid, .numbered, .flow, .metric-row").forEach((list) => {
+        list.setAttribute("role", "list");
+      });
+      document.querySelectorAll(".card, .priority, .numbered-item, .flow-card, .metric").forEach((item) => {
+        item.setAttribute("role", "listitem");
+      });
+      stacks.forEach((stack, hIndex) => {
+        stackSlides(hIndex).forEach((slide, vIndex) => {
+          slide.id = slide.id || `slide-${hIndex + 1}-${vIndex + 1}`;
+          slide.setAttribute("role", "group");
+          slide.setAttribute("aria-roledescription", "slide");
+          slide.setAttribute("aria-label", `Slide ${flatIndexFor(hIndex, vIndex)} of ${totalSlides()}: ${slideTitle(slide, hIndex, vIndex)}`);
+          slide.tabIndex = -1;
+        });
+      });
+    }
+
+    function clampPosition() {
+      currentH = Math.max(0, Math.min(currentH, stacks.length - 1));
+      currentV = Math.max(0, Math.min(currentV, stackSlides().length - 1));
+    }
+
+    function setHash() {
+      const hash = currentV ? `#/${currentH}/${currentV}` : `#/${currentH}`;
+      if (window.location.hash !== hash) {
+        history.replaceState(null, "", hash);
+      }
+    }
+
+    function readHash() {
+      const parts = window.location.hash.replace(/^#\/?/, "").split("/").filter(Boolean).map(Number);
+      currentV = 0;
+      if (Number.isFinite(parts[0])) currentH = parts[0];
+      if (Number.isFinite(parts[1])) currentV = parts[1];
+      clampPosition();
+    }
+
+    function updateButtons() {
+      buttons.left.disabled = currentH === 0;
+      buttons.right.disabled = currentH === stacks.length - 1;
+      buttons.up.disabled = currentV === 0;
+      buttons.down.disabled = currentV === stackSlides().length - 1;
+    }
+
+    function render() {
+      clampPosition();
+      stacks.forEach((stack, hIndex) => {
+        const activeStack = hIndex === currentH;
+        stack.classList.toggle("is-active", activeStack);
+        stack.setAttribute("aria-hidden", String(!activeStack));
+        Array.from(stack.querySelectorAll(".slide")).forEach((slide, vIndex) => {
+          const active = activeStack && vIndex === currentV;
+          slide.classList.toggle("is-active", active);
+          slide.setAttribute("aria-hidden", String(!active));
+        });
+      });
+      const flat = currentFlatIndex();
+      progress.style.setProperty("--progress", `${(flat / totalSlides()) * 100}%`);
+      counter.textContent = currentV ? `${currentH + 1}.${currentV + 1}` : `${currentH + 1}`;
+      document.title = `${slideTitle(activeSlide(), currentH, currentV)} | Pillar 1 URI Interactive Presentation`;
+      updateButtons();
+      setHash();
+      renderOverview();
+      syncOverlayState();
+      if (focusSlideOnRender && !overview.classList.contains("is-open") && !help.classList.contains("is-open")) {
+        activeSlide().focus({ preventScroll: true });
+        focusSlideOnRender = false;
+      }
+      announceActiveSlide();
+    }
+
+    function navigate(direction) {
+      if (help.classList.contains("is-open")) {
+        closeOverlays();
+        return;
+      }
+      if (overview.classList.contains("is-open") && direction !== "overview") {
+        overview.classList.remove("is-open");
+      }
+      if (direction === "left" && currentH > 0) {
+        currentH -= 1;
+        currentV = 0;
+        focusSlideOnRender = true;
+      }
+      if (direction === "right" && currentH < stacks.length - 1) {
+        currentH += 1;
+        currentV = 0;
+        focusSlideOnRender = true;
+      }
+      if (direction === "up" && currentV > 0) {
+        currentV -= 1;
+        focusSlideOnRender = true;
+      }
+      if (direction === "down" && currentV < stackSlides().length - 1) {
+        currentV += 1;
+        focusSlideOnRender = true;
+      }
+      if (direction === "overview") {
+        overview.classList.toggle("is-open");
+      }
+      render();
+      if (direction === "overview" && overview.classList.contains("is-open")) {
+        overview.querySelector(".overview-card.is-current")?.focus();
+      }
+    }
+
+    function toggleHelp() {
+      const willOpen = !help.classList.contains("is-open");
+      overview.classList.remove("is-open");
+      help.classList.toggle("is-open", willOpen);
+      syncOverlayState();
+      if (willOpen) {
+        helpPanel.focus({ preventScroll: true });
+      }
+    }
+
+    function closeOverlays() {
+      overview.classList.remove("is-open");
+      help.classList.remove("is-open");
+      syncOverlayState();
+      activeSlide().focus({ preventScroll: true });
+    }
+
+    function focusableElements(container) {
+      return Array.from(container.querySelectorAll("button, [href], [tabindex]:not([tabindex='-1'])"))
+        .filter((element) => !element.disabled && element.getAttribute("aria-hidden") !== "true");
+    }
+
+    function trapOverlayFocus(event) {
+      const activeDialog = help.classList.contains("is-open") ? help : overview.classList.contains("is-open") ? overview : null;
+      if (!activeDialog || event.key !== "Tab") return false;
+      const focusable = focusableElements(activeDialog);
+      if (!focusable.length) {
+        event.preventDefault();
+        return true;
+      }
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+        return true;
+      }
+      if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+        return true;
+      }
+      return false;
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen?.();
+      } else {
+        document.exitFullscreen?.();
+      }
+    }
+
+    function renderOverview() {
+      let flat = 0;
+      overviewGrid.innerHTML = stacks.map((stack, hIndex) => {
+        const slides = Array.from(stack.querySelectorAll(".slide"));
+        return slides.map((slide, vIndex) => {
+          flat += 1;
+          const title = slide.dataset.title || stack.dataset.label || `Slide ${flat}`;
+          const current = hIndex === currentH && vIndex === currentV;
+          return `
+            <button class="overview-card ${current ? "is-current" : ""}" type="button" data-h="${hIndex}" data-v="${vIndex}" aria-current="${current ? "true" : "false"}" aria-label="Go to slide ${flat} of ${totalSlides()}: ${title}">
+              <strong>${hIndex + 1}${vIndex ? "." + (vIndex + 1) : ""}</strong>
+              <span>${title}</span>
+            </button>
+          `;
+        }).join("");
+      }).join("");
+      overviewGrid.querySelectorAll("button").forEach((button) => {
+        button.addEventListener("click", () => {
+          currentH = Number(button.dataset.h);
+          currentV = Number(button.dataset.v);
+          overview.classList.remove("is-open");
+          focusSlideOnRender = true;
+          render();
+        });
+      });
+    }
+
+    document.addEventListener("keydown", (event) => {
+      if (trapOverlayFocus(event)) return;
+      const overlayOpen = overview.classList.contains("is-open") || help.classList.contains("is-open");
+      if (event.key === "Escape") {
+        event.preventDefault();
+        if (overlayOpen) {
+          closeOverlays();
+        } else {
+          navigate("overview");
+        }
+        return;
+      }
+      if (overlayOpen) return;
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        navigate("left");
+      }
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        navigate("right");
+      }
+      if (event.key === "ArrowUp") {
+        event.preventDefault();
+        navigate("up");
+      }
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        navigate("down");
+      }
+      if (event.altKey && event.key.toLowerCase() === "f") {
+        event.preventDefault();
+        toggleFullscreen();
+      }
+      if (event.altKey && event.key.toLowerCase() === "h") {
+        event.preventDefault();
+        toggleHelp();
+      }
+    });
+
+    buttons.left.addEventListener("click", () => navigate("left"));
+    buttons.right.addEventListener("click", () => navigate("right"));
+    buttons.up.addEventListener("click", () => navigate("up"));
+    buttons.down.addEventListener("click", () => navigate("down"));
+    buttons.overview.addEventListener("click", () => navigate("overview"));
+    buttons.help.addEventListener("click", toggleHelp);
+    buttons.fullscreen.addEventListener("click", toggleFullscreen);
+    buttons.overviewClose.addEventListener("click", closeOverlays);
+    buttons.helpClose.addEventListener("click", closeOverlays);
+    let touchStartX = 0;
+    let touchStartY = 0;
+    document.addEventListener("touchstart", (event) => {
+      const touch = event.changedTouches[0];
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+    }, { passive: true });
+    document.addEventListener("touchend", (event) => {
+      const touch = event.changedTouches[0];
+      const deltaX = touch.clientX - touchStartX;
+      const deltaY = touch.clientY - touchStartY;
+      if (Math.max(Math.abs(deltaX), Math.abs(deltaY)) < 48) return;
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        navigate(deltaX < 0 ? "right" : "left");
+      } else {
+        navigate(deltaY < 0 ? "down" : "up");
+      }
+    }, { passive: true });
+    overview.addEventListener("click", (event) => {
+      if (event.target === overview) {
+        closeOverlays();
+      }
+    });
+    help.addEventListener("click", (event) => {
+      if (event.target === help) {
+        closeOverlays();
+      }
+    });
+    window.addEventListener("hashchange", () => {
+      overview.classList.remove("is-open");
+      help.classList.remove("is-open");
+      readHash();
+      focusSlideOnRender = true;
+      render();
+    });
+
+    initializeSemantics();
+    readHash();
+    render();
+  </script>
+</body>
+</html>
