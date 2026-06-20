@@ -224,6 +224,23 @@
       text-wrap: balance;
     }
 
+    .ai-disclosure {
+      max-width: 940px;
+      margin: 2px auto 0;
+      padding: 10px 14px;
+      border-left: 4px solid var(--uri-gold);
+      border-radius: var(--radius);
+      color: rgba(248, 251, 255, 0.94);
+      background: rgba(0, 21, 47, 0.72);
+      font-size: clamp(0.88rem, 1.05vw, 1rem);
+      text-align: left;
+      box-shadow: 0 12px 34px rgba(0, 0, 0, 0.22);
+    }
+
+    .ai-disclosure strong {
+      color: var(--white);
+    }
+
     .body-copy {
       max-width: 880px;
       margin: 0 auto;
@@ -1058,6 +1075,7 @@
             <span><kbd>Esc</kbd> overview</span>
             <span><kbd>Alt</kbd> + <kbd>H</kbd> help</span>
           </div>
+          <p class="ai-disclosure" role="note" aria-label="AI use disclosure"><strong>AI Use Disclosure: A3 &mdash; AI-Assisted Drafting.</strong> AI tools were used to draft and implement portions of this interactive presentation from A2 &mdash; Al-Assisted Ideation human-provided source material. The human author directed the project, reviewed the output, and requested revisions before sharing.</p>
         </div>
       </article>
     </section>
